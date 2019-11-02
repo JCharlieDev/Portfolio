@@ -1,15 +1,12 @@
 /*! Superslides - v0.6.3-wip - 2013-12-17
 * https://github.com/nicinabox/superslides
 * Copyright (c) 2013 Nic Aitch; Licensed MIT */
-(function(window, $) 
-{
+(function(window, $) {
 
 var Superslides, plugin = 'superslides';
 
-Superslides = function(el, options) 
-{
-  this.options = $.extend(
-  {
+Superslides = function(el, options) {
+  this.options = $.extend({
     play: false,
     animation_speed: 600,
     animation_easing: 'swing',
@@ -19,8 +16,7 @@ Superslides = function(el, options)
     pagination: true,
     hashchange: false,
     scrollable: true,
-    elements: 
-    {
+    elements: {
       preserve: '.preserve',
       nav: '.slides-navigation',
       container: '.slides-container',
@@ -36,45 +32,35 @@ Superslides = function(el, options)
   this.$container = this.$el.find(this.options.elements.container);
 
   // Private Methods
-  var initialize = function() 
-  {
+  var initialize = function() {
     multiplier = that._findMultiplier();
 
-    that.$el.on('click', that.options.elements.nav + " a", function(e) 
-    {
+    that.$el.on('click', that.options.elements.nav + " a", function(e) {
       e.preventDefault();
 
       that.stop();
-      if ($(this).hasClass('next')) 
-      {
-        that.animate('next', function() 
-        {
+      if ($(this).hasClass('next')) {
+        that.animate('next', function() {
           that.start();
         });
       } else {
-        that.animate('prev', function() 
-        {
+        that.animate('prev', function() {
           that.start();
         });
       }
     });
 
-    $(document).on('keyup', function(e) 
-    {
-      if (e.keyCode === 37) 
-      {
+    $(document).on('keyup', function(e) {
+      if (e.keyCode === 37) {
         that.animate('prev');
       }
-      if (e.keyCode === 39) 
-      {
+      if (e.keyCode === 39) {
         that.animate('next');
       }
     });
 
-    $(window).on('resize', function() 
-    {
-      setTimeout(function() 
-      {
+    $(window).on('resize', function() {
+      setTimeout(function() {
         var $children = that.$container.children();
 
         that.width  = that._findWidth();
@@ -90,16 +76,13 @@ Superslides = function(el, options)
       }, 10);
     });
 
-    if (that.options.hashchange) 
-    {
-      $(window).on('hashchange', function() 
-      {
+    if (that.options.hashchange) {
+      $(window).on('hashchange', function() {
         var hash = that._parseHash(), index;
 
         index = that._upcomingSlide(hash);
 
-        if (index >= 0 && index !== that.current) 
-        {
+        if (index >= 0 && index !== that.current) {
           that.animate(index);
         }
       });
@@ -112,10 +95,8 @@ Superslides = function(el, options)
   };
 
 var css = {
-  containers: function() 
-  {
-    if (that.init) 
-    {
+  containers: function() {
+    if (that.init) {
       that.$el.css({
         height: that.height
       });
@@ -128,9 +109,7 @@ var css = {
       that.$container.css({
 
       });
-    }
-    else 
-    {
+    } else {
       $('body').css({
         margin: 0
       });
@@ -160,8 +139,7 @@ var css = {
       });
     }
 
-    if (that.size() === 1) 
-    {
+    if (that.size() === 1) {
       that.$el.find(that.options.elements.nav).hide();
     }
   },
@@ -180,32 +158,26 @@ var css = {
         "max-width": 'none'
       });
 
-    $images.each(function() 
-    {
+    $images.each(function() {
       var image_aspect_ratio = that.image._aspectRatio(this),
           image = this;
 
-      if (!$.data(this, 'processed')) 
-      {
+      if (!$.data(this, 'processed')) {
         var img = new Image();
-        img.onload = function() 
-        {
+        img.onload = function() {
           that.image._scale(image, image_aspect_ratio);
           that.image._center(image, image_aspect_ratio);
           $.data(image, 'processed', true);
         };
         img.src = this.src;
 
-      }
-      else 
-      {
+      } else {
         that.image._scale(image, image_aspect_ratio);
         that.image._center(image, image_aspect_ratio);
       }
     });
   },
-  children: function() 
-  {
+  children: function() {
     var $children = that.$container.children();
 
     if ($children.is('img')) {
@@ -243,8 +215,7 @@ var css = {
 }
 
 var fx = {
-  slide: function(orientation, complete) 
-  {
+  slide: function(orientation, complete) {
     var $children = that.$container.children(),
         $target   = $children.eq(orientation.upcoming_slide);
 
@@ -269,8 +240,7 @@ var fx = {
           zIndex: 2
         });
 
-        if (orientation.outgoing_slide >= 0) 
-        {
+        if (orientation.outgoing_slide >= 0) {
           $children.eq(orientation.outgoing_slide).css({
             left: that.width,
             display: 'none',
@@ -282,8 +252,7 @@ var fx = {
       complete();
     });
   },
-  fade: function(orientation, complete) 
-  {
+  fade: function(orientation, complete) {
     var that = this,
         $children = that.$container.children(),
         $outgoing = $children.eq(orientation.outgoing_slide),
@@ -300,22 +269,19 @@ var fx = {
         that.options.animation_easing
     );
 
-    if (orientation.outgoing_slide >= 0) 
-    {
+    if (orientation.outgoing_slide >= 0) {
       $outgoing.animate({
         opacity: 0
       },
       that.options.animation_speed,
       that.options.animation_easing,
       function() {
-        if (that.size() > 1) 
-        {
+        if (that.size() > 1) {
           $children.eq(orientation.upcoming_slide).css({
             zIndex: 2
           });
 
-          if (orientation.outgoing_slide >= 0) 
-          {
+          if (orientation.outgoing_slide >= 0) {
             $children.eq(orientation.outgoing_slide).css({
               opacity: 1,
               display: 'none',
@@ -366,15 +332,13 @@ var image = {
 
     return image.naturalHeight / image.naturalWidth;
   },
-  _scale: function(image, image_aspect_ratio) 
-  {
+  _scale: function(image, image_aspect_ratio) {
     image_aspect_ratio = image_aspect_ratio || that.image._aspectRatio(image);
 
     var container_aspect_ratio = that.height / that.width,
         $img = $(image);
 
-    if (container_aspect_ratio > image_aspect_ratio) 
-    {
+    if (container_aspect_ratio > image_aspect_ratio) {
       $img.css({
         height: that.height,
         width: that.height / image_aspect_ratio
@@ -389,14 +353,9 @@ var image = {
   }
 };
 
-var pagination = 
-{
-  _setCurrent: function(i) 
-  {
-    if (!that.$pagination) 
-      { 
-        return; 
-      }
+var pagination = {
+  _setCurrent: function(i) {
+    if (!that.$pagination) { return; }
 
     var $pagination_children = that.$pagination.children();
 
@@ -404,8 +363,7 @@ var pagination =
     $pagination_children.eq(i)
       .addClass('current');
   },
-  _addItem: function(i) 
-  {
+  _addItem: function(i) {
     var slide_number = i + 1,
         href = slide_number,
         $slide = that.$container.children().eq(i),
@@ -415,42 +373,35 @@ var pagination =
       href = slide_id;
     }
 
-    var $item = $("<a>", 
-    {
+    var $item = $("<a>", {
       'href': "#" + href,
       'text': href
     });
 
     $item.appendTo(that.$pagination);
   },
-  _setup: function() 
-  {
+  _setup: function() {
     if (!that.options.pagination || that.size() === 1) { return; }
 
-    var $pagination = $("<nav>", 
-    {
+    var $pagination = $("<nav>", {
       'class': that.options.elements.pagination.replace(/^\./, '')
     });
 
     that.$pagination = $pagination.appendTo(that.$el);
 
-    for (var i = 0; i < that.size(); i++) 
-    {
+    for (var i = 0; i < that.size(); i++) {
       that.pagination._addItem(i);
     }
   },
   _events: function() {
-    that.$el.on('click', that.options.elements.pagination + ' a', function(e) 
-    {
+    that.$el.on('click', that.options.elements.pagination + ' a', function(e) {
       e.preventDefault();
 
       var hash  = that._parseHash(this.hash), index;
       index = that._upcomingSlide(hash, true);
 
-      if (index !== that.current) 
-      {
-        that.animate(index, function() 
-        {
+      if (index !== that.current) {
+        that.animate(index, function() {
           that.start();
         });
       }
@@ -478,46 +429,35 @@ var pagination =
   return initialize();
 };
 
-Superslides.prototype = 
-{
-  _findWidth: function() 
-  {
+Superslides.prototype = {
+  _findWidth: function() {
     return $(this.options.inherit_width_from).width();
   },
-  _findHeight: function() 
-  {
+  _findHeight: function() {
     return $(this.options.inherit_height_from).height();
   },
 
-  _findMultiplier: function() 
-  {
+  _findMultiplier: function() {
     return this.size() === 1 ? 1 : 3;
   },
 
-  _upcomingSlide: function(direction, from_hash_change) 
-  {
-    if (from_hash_change && !isNaN(direction)) 
-    {
+  _upcomingSlide: function(direction, from_hash_change) {
+    if (from_hash_change && !isNaN(direction)) {
       direction = direction - 1;
     }
 
-    if ((/next/).test(direction)) 
-    {
+    if ((/next/).test(direction)) {
       return this._nextInDom();
 
-    } else if ((/prev/).test(direction)) 
-    {
+    } else if ((/prev/).test(direction)) {
       return this._prevInDom();
 
-    } else if ((/\d/).test(direction)) 
-    {
+    } else if ((/\d/).test(direction)) {
       return +direction;
 
-    } else if (direction && (/\w/).test(direction)) 
-    {
+    } else if (direction && (/\w/).test(direction)) {
       var index = this._findSlideById(direction);
-      if (index >= 0) 
-      {
+      if (index >= 0) {
         return index;
       } else {
         return 0;
@@ -528,17 +468,14 @@ Superslides.prototype =
     }
   },
 
-  _findSlideById: function(id) 
-  {
+  _findSlideById: function(id) {
     return this.$container.find('#' + id).index();
   },
 
-  _findPositions: function(current, thisRef) 
-  {
+  _findPositions: function(current, thisRef) {
     thisRef = thisRef || this;
 
-    if (current === undefined) 
-    {
+    if (current === undefined) {
       current = -1;
     }
 
@@ -547,20 +484,17 @@ Superslides.prototype =
     thisRef.prev    = thisRef._prevInDom();
   },
 
-  _nextInDom: function() 
-  {
+  _nextInDom: function() {
     var index = this.current + 1;
 
-    if (index === this.size()) 
-    {
+    if (index === this.size()) {
       index = 0;
     }
 
     return index;
   },
 
-  _prevInDom: function() 
-  {
+  _prevInDom: function() {
     var index = this.current - 1;
 
     if (index < 0) {
@@ -570,31 +504,26 @@ Superslides.prototype =
     return index;
   },
 
-  _parseHash: function(hash) 
-  {
+  _parseHash: function(hash) {
     hash = hash || window.location.hash;
     hash = hash.replace(/^#/, '');
 
-    if (hash && !isNaN(+hash)) 
-    {
+    if (hash && !isNaN(+hash)) {
       hash = +hash;
     }
 
     return hash;
   },
 
-  size: function() 
-  {
+  size: function() {
     return this.$container.children().length;
   },
 
-  destroy: function() 
-  {
+  destroy: function() {
     return this.$el.removeData();
   },
 
-  update: function() 
-  {
+  update: function() {
     this.css.children();
     this.css.containers();
     this.css.images();
@@ -605,35 +534,28 @@ Superslides.prototype =
     this.$el.trigger('updated.slides');
   },
 
-  stop: function() 
-  {
+  stop: function() {
     clearInterval(this.play_id);
     delete this.play_id;
 
     this.$el.trigger('stopped.slides');
   },
 
-  start: function() 
-  {
+  start: function() {
     var that = this;
 
-    if (that.options.hashchange) 
-    {
+    if (that.options.hashchange) {
       $(window).trigger('hashchange');
-    } else 
-    {
+    } else {
       this.animate();
     }
 
-    if (this.options.play) 
-    {
-      if (this.play_id) 
-      {
+    if (this.options.play) {
+      if (this.play_id) {
         this.stop();
       }
 
-      this.play_id = setInterval(function() 
-      {
+      this.play_id = setInterval(function() {
         that.animate();
       }, this.options.play);
     }
@@ -641,8 +563,7 @@ Superslides.prototype =
     this.$el.trigger('started.slides');
   },
 
-  animate: function(direction, userCallback) 
-  {
+  animate: function(direction, userCallback) {
     var that = this,
         orientation = {};
 
@@ -652,15 +573,13 @@ Superslides.prototype =
 
     this.animating = true;
 
-    if (direction === undefined) 
-    {
+    if (direction === undefined) {
       direction = 'next';
     }
 
     orientation.upcoming_slide = this._upcomingSlide(direction);
 
-    if (orientation.upcoming_slide >= this.size()) 
-    {
+    if (orientation.upcoming_slide >= this.size()) {
       return;
     }
 
@@ -668,19 +587,16 @@ Superslides.prototype =
     orientation.upcoming_position = this.width * 2;
     orientation.offset            = -orientation.upcoming_position;
 
-    if (direction === 'prev' || direction < orientation.outgoing_slide) 
-    {
+    if (direction === 'prev' || direction < orientation.outgoing_slide) {
       orientation.upcoming_position = 0;
       orientation.offset            = 0;
     }
 
-    if (that.size() > 1) 
-    {
+    if (that.size() > 1) {
       that.pagination._setCurrent(orientation.upcoming_slide);
     }
 
-    if (that.options.hashchange) 
-    {
+    if (that.options.hashchange) {
       var hash = orientation.upcoming_slide + 1,
           id = that.$container.children(':eq(' + orientation.upcoming_slide + ')').attr('id');
 
@@ -690,8 +606,7 @@ Superslides.prototype =
         window.location.hash = hash;
       }
     }
-    if (that.size() === 1) 
-    {
+    if (that.size() === 1) {
       that.stop();
       that.options.play = 0;
       that.options.animation_speed = 0;
@@ -700,12 +615,10 @@ Superslides.prototype =
     }
     that.$el.trigger('animating.slides', [orientation]);
 
-    that.animation(orientation, function() 
-    {
+    that.animation(orientation, function() {
       that._findPositions(orientation.upcoming_slide, that);
 
-      if (typeof userCallback === 'function') 
-      {
+      if (typeof userCallback === 'function') {
         userCallback();
       }
 
@@ -723,28 +636,23 @@ Superslides.prototype =
 
 // jQuery plugin definition
 
-$.fn[plugin] = function(option, args) 
-{
+$.fn[plugin] = function(option, args) {
   var result = [];
 
-  this.each(function() 
-  {
+  this.each(function() {
     var $this, data, options;
 
     $this = $(this);
     data = $this.data(plugin);
     options = typeof option === 'object' && option;
 
-    if (!data) 
-    {
+    if (!data) {
       result = $this.data(plugin, (data = new Superslides(this, options)));
     }
 
-    if (typeof option === "string") 
-    {
+    if (typeof option === "string") {
       result = data[option];
-      if (typeof result === 'function') 
-      {
+      if (typeof result === 'function') {
         return result = result.call(data, args);
       }
     }
