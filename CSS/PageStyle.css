@@ -1,6 +1,6 @@
 body
 {
-	background-image: radial-gradient(circle at top right, gray, black);
+	background-image: radial-gradient(circle at top left, gray, black);
 	letter-spacing: 1px;
 }
 
@@ -92,7 +92,7 @@ h5
 
 .aboutImage
 {
-	max-width: 100%;
+	max-width: 75%;
 
 }
 
@@ -156,6 +156,7 @@ h5
 {
 	color: white;
 	text-align: center;
+	background-color: black;
 }
 
 .filter
@@ -196,4 +197,25 @@ h5
 	text-align: center;
 	padding-bottom: 40px;
 	width: 100%;
+}
+
+#block1
+{
+    display: inline-block;
+}
+#block2
+{
+    display: inline-block;
+}
+#block3
+{
+    display: inline-block;
+}
+#block4
+{
+    display: inline-block;
+}
+#block5
+{
+    display: inline-block;
 }
