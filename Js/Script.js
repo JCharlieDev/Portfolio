@@ -44,7 +44,7 @@ $(document).ready(function()
 
 	owl.on('mousewheel', '.owl-stage', function (e) 
 	{
-	    if (e.deltaY>0) 
+	    if (e.deltaY > 0) 
 	    {
 	        owl.trigger('next.owl');
 	    } 
@@ -54,6 +54,42 @@ $(document).ready(function()
 	    }
 	    e.preventDefault();
 	});
+
+	$("[data-fancy] ").fancybox();
+
+	$(".items").isotope(
+	{
+		filter: '*',
+		animationOptions: 
+		{
+			duration: 1500,
+			easing: "linear",
+			queue: false
+		}
+	})
+
+	$("#filters a").click(function()
+	{
+		$("#filters .current").removeClass("current");
+		$(this).addClass("current");
+
+		var selector = $(this).attr("data-filter");
+
+		$(".items").isotope(
+		{
+			filter: selector,
+			animationOptions: 
+			{
+				duration: 1500,
+				easing: "linear",
+				queue: false
+			}
+		})
+
+		return false;
+
+	});
+
 
 
 });
